@@ -1,10 +1,16 @@
-(ns simisola.views
-  (:require
-   [re-frame.core :as re-frame]
-   [simisola.subs :as subs]))
+(ns simisola.views)
+
+
+(defn card [img-path]
+  [:img.pa2.dib.w-25
+   {:src img-path}])
 
 (defn main-panel []
-  (let [name (re-frame/subscribe [::subs/name])]
-    [:div
-     [:h1 "Hello from " @name]]))
+  [:section.tc.pv3.ph7
+   [card "/images/meditation.jpg"]
+   [card "/images/ritual_2.jpg"]
+   [card "/images/practice.jpg"]
+   [card "/images/develop.jpg"]
+   [card "/images/creation_2.jpg"]])
+
 
