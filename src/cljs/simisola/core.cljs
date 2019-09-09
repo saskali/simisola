@@ -2,11 +2,16 @@
   (:require
    [reagent.core :as reagent]
    [re-frame.core :as re-frame]
-   [simisola.events :as events]
-   [simisola.views :as views]
    [simisola.config :as config]
-   ))
+   [simisola.events :as events]
+   [simisola.subs]
+   [simisola.views :as views]))
 
+
+;; input: time availability and mood
+;; get a suggestion
+;; time availability can be < 20 min, < 40 min, < 60 min
+;; mood can be fatigue, sad or tense
 
 (defn dev-setup []
   (when config/debug?
