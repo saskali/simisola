@@ -1,10 +1,11 @@
 (ns simisola.events
   (:require
-   [re-frame.core :as re-frame]
+   [day8.re-frame.tracing :refer-macros [fn-traced]]
+   [re-frame.core :refer [reg-event-db]]
    [simisola.db :as db]))
 
 
-(re-frame/reg-event-db
+(reg-event-db
  ::initialize-db
- (fn [_ _]
+ (fn-traced [_ _]
    db/default-db))

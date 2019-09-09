@@ -21,4 +21,6 @@
 
   :profiles
   {:dev
-   {:dependencies [[binaryage/devtools "0.9.10"]]}})
+   {:dependencies [[binaryage/devtools "0.9.10"]
+                   [day8.re-frame/re-frame-10x "0.4.1"]
+                   [day8.re-frame/tracing "0.5.3"]]}})
