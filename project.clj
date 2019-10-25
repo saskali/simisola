@@ -9,6 +9,8 @@
 
   :plugins []
 
+  :jvm-opts ["-Xmx1g"]
+
   :min-lein-version "2.5.3"
 
   :source-paths ["src/clj" "src/cljs"]
