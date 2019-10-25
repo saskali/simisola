@@ -13,12 +13,13 @@
 
   :min-lein-version "2.5.3"
 
-  :source-paths ["src/clj" "src/cljs"]
+  :source-paths ["src/clj" "src/cljs" "test"]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
 
   :aliases {"dev"  ["with-profile" "dev" "run" "-m" "shadow.cljs.devtools.cli" "watch" "app"]
+            "test" ["with-profile" "dev" "run" "-m" "shadow.cljs.devtools.cli" "watch" "tests"]
             "prod" ["with-profile" "prod" "run" "-m" "shadow.cljs.devtools.cli" "release" "app"]}
 
   :profiles
