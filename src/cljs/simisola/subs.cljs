@@ -4,26 +4,26 @@
 
 
 (reg-sub
-  ::view
+  :view
   (fn [db]
     (:view db)))
 
 (reg-sub
-  ::time-spans
+  :time-spans
   (fn [db]
     (:time-spans db)))
 
 (reg-sub
-  ::time-selected
+  :time-selected
   (fn [db]
     (get-in db [:state :time-selected])))
 
 (reg-sub
-  ::feelings
+  :feelings
   (fn [db]
     (:feelings db)))
 
 (reg-sub
- ::meditations
+ :meditations
  (fn [db]
    (:meditations db)))

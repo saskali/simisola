@@ -16,7 +16,7 @@
   (into [:div.w-30.pa3.mr2]
         (map (fn [time-span]
                (button-pill-grow
-                {:on-click #(dispatch [::events/update-time time-span])}
+                {:on-click #(dispatch [:update-time time-span])}
                 (str "< " time-span)))
              time-spans)))
 
@@ -25,7 +25,7 @@
   (into [:div.w-30.pa3.mr2]
         (map (fn [feeling]
                [:label.mh2.pointer
-                {:on-change #(dispatch [::events/update-feeling feeling])}
+                {:on-change #(dispatch [:update-feeling feeling])}
                 [:input.mr2.v-mid.pointer
                  {:type "checkbox"}]
                 (name feeling)])
@@ -50,7 +50,7 @@
     [feelings-selection feelings]]
 
    [:div.f1.flex.justify-center.mv3
-    (button-pill-grow {:on-click #(dispatch [::events/change-view routes/practice])} "And go!")]])
+    (button-pill-grow {:on-click #(dispatch [:change-view routes/practice])} "And go!")]])
 
 
 (defn practice []
@@ -67,10 +67,10 @@
 
 
 (defn main-panel []
-  (let [view (subscribe [::subs/view])
-        time-spans (subscribe [::subs/time-spans])
-        time-selected (subscribe [::subs/time-selected])
-        feelings (subscribe [::subs/feelings])]
+  (let [view (subscribe [:view])
+        time-spans (subscribe [:time-spans])
+        time-selected (subscribe [:time-selected])
+        feelings (subscribe [:feelings])]
 
     (fn []
       (condp = @view

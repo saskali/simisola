@@ -7,23 +7,23 @@
 
 
 (reg-event-db
- ::initialize-db
+ :initialize-db
  (fn-traced [_ _]
    db/default-db))
 
 (reg-event-db
-  ::change-view
+  :change-view
   (fn-traced [db [_ view-name]]
     (assoc db :view view-name)))
 
 (reg-event-fx
-  ::update-time
+  :update-time
   (fn-traced [{:keys [db]} [_ time]]
     {:db (assoc-in db [:state :time-selected] time)
-     :dispatch [::change-view routes/feelings]}))
+     :dispatch [:change-view routes/feelings]}))
 
 (reg-event-db
-  ::update-feeling
+  :update-feeling
   (fn-traced [db [_ feeling]]
     (update-in db [:state :feelings-selected]
                #(if (contains? % feeling)
