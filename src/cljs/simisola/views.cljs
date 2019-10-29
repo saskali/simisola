@@ -69,7 +69,7 @@
 (defn main-panel []
   (let [view (subscribe [:view])
         time-spans (subscribe [:time-spans])
-        time-selected (subscribe [:time-selected])
+        time-selected (subscribe [:selected :time])
         feelings (subscribe [:feelings])]
 
     (fn []

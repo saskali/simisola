@@ -40,5 +40,5 @@
    :time-spans  time-spans
    :feelings    feelings
    :meditations meditations
-   :state       {:time-selected     nil
-                 :feelings-selected #{}}})
+   :state       {:time     nil
+                 :feelings #{}}})

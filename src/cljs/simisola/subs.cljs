@@ -14,9 +14,9 @@
     (:time-spans db)))
 
 (reg-sub
-  :time-selected
-  (fn [db]
-    (get-in db [:state :time-selected])))
+  :selected
+  (fn [db [_ value]]
+    (get-in db [:state value])))
 
 (reg-sub
   :feelings
