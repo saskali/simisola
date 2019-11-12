@@ -50,26 +50,28 @@
     [feelings-selection feelings]]
 
    [:div.f1.flex.justify-center.mv3
-    (button-pill-grow {:on-click #(dispatch [:change-view routes/practice])} "And go!")]])
+    (button-pill-grow {:on-click #(dispatch [:make-suggestion])} "And go!")]])
 
 
 (defn practice []
-  [:div
-   {:style {:max-width "80%"}}
-   [:iframe.mv5
-    {:allow-full-screen "allowfullscreen"
-     :frame-border 0
-     :align "right"
-     :wmode "opaque"
-     :height 480
-     :width 854
-     :src "https://www.youtube.com/embed/oJ_7Le2n7fU"}]])
+  (let [suggestion (subscribe [:state :suggested-practice])]
+    (fn []
+      [:div
+       {:style {:max-width "80%"}}
+       [:iframe.mv5
+        {:allow-full-screen "allowfullscreen"
+         :frame-border 0
+         :align "right"
+         :wmode "opaque"
+         :height 480
+         :width 854
+         :src (:link @suggestion)}]])))
 
 
 (defn main-panel []
   (let [view (subscribe [:view])
         time-spans (subscribe [:time-spans])
-        time-selected (subscribe [:selected :time])
+        time-selected (subscribe [:state :time])
         feelings (subscribe [:feelings])]
 
     (fn []

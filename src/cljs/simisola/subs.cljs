@@ -14,7 +14,7 @@
     (:time-spans db)))
 
 (reg-sub
-  :selected
+  :state
   (fn [db [_ value]]
     (get-in db [:state value])))
 

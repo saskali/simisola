@@ -22,11 +22,10 @@
     (run-test-sync
       (dispatch [:initialize-db])
       (dispatch [:update-time 20])
-      (is (= 20 @(subscribe [:selected :time])))
+      (is (= 20 @(subscribe [:state :time])))
 
       (dispatch [:update-feeling :tense])
-      (is (contains? @(subscribe [:selected :feelings]) :tense))
+      (is (contains? @(subscribe [:state :feelings]) :tense))
 
       (dispatch [:update-feeling :tense])
-      (is (-> @(subscribe [:selected :feelings]) (contains? :tense) not)))))
-
+      (is (-> @(subscribe [:state :feelings]) (contains? :tense) not)))))
