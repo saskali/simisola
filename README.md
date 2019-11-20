@@ -20,3 +20,9 @@ Wait a bit, then browse to [http://localhost:8280](http://localhost:8280).
 ```
 shadow-cljs watch tests
 ```
+
+### Create release:
+
+```
+lein prod
+```
