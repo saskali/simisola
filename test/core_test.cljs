@@ -3,8 +3,7 @@
             [day8.re-frame.test :refer [run-test-sync]]
             [re-frame.core :refer [dispatch subscribe]]
             [simisola.events]
-            [simisola.subs]
-            [simisola.routes :as routes]))
+            [simisola.subs]))
 
 (deftest handlers-test
   (testing "routes work correctly"
@@ -13,19 +12,16 @@
       (is (= :time-span @(subscribe [:view])))
 
       (dispatch [:update-time])
-      (is (= :feelings @(subscribe [:view])))
-
-      (dispatch [:change-view routes/practice])
-      (is (= :practice @(subscribe [:view])))))
+      (is (= :feelings @(subscribe [:view])))))
 
   (testing "user inputs work correctly"
     (run-test-sync
       (dispatch [:initialize-db])
       (dispatch [:update-time 20])
-      (is (= 20 @(subscribe [:state :time])))
+      (is (= 20 @(subscribe [:state :time-input])))
 
       (dispatch [:update-feeling :tense])
-      (is (contains? @(subscribe [:state :feelings]) :tense))
+      (is (contains? @(subscribe [:state :feelings-input]) :tense))
 
       (dispatch [:update-feeling :tense])
-      (is (-> @(subscribe [:state :feelings]) (contains? :tense) not)))))
+      (is (-> @(subscribe [:state :feelings-input]) (contains? :tense) not)))))

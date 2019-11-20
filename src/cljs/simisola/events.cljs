@@ -2,8 +2,9 @@
   (:require
     [clojure.set :as set]
     [day8.re-frame.tracing :refer-macros [fn-traced]]
-    [re-frame.core :refer [reg-event-db reg-event-fx]]
+    [re-frame.core :refer [reg-event-db reg-event-fx reg-fx]]
     [simisola.db :as db]
+    [simisola.practices :as practices]
     [simisola.routes :as routes]))
 
 
@@ -20,39 +21,33 @@
 (reg-event-fx
   :update-time
   (fn-traced [{:keys [db]} [_ time]]
-    {:db (assoc-in db [:state :time] time)
+    {:db (assoc-in db [:state :time-input] time)
      :dispatch [:change-view routes/feelings]}))
 
 (reg-event-db
   :update-feeling
   (fn-traced [db [_ feeling]]
-    (update-in db [:state :feelings]
+    (update-in db [:state :feelings-input]
                #(if (contains? % feeling)
                   (disj % feeling)
                   (conj % feeling)))))
 
-(def practices
-  [{:title "Morning Flow Yoga Meditation"
-    :length [15 21]
-    :attributes #{:fatique}
-    :link "https://www.youtube.com/embed/oJ_7Le2n7fU"}
-   {:title "Yoga For Tension Relief"
-    :length [28 13]
-    :attributes #{:tense}
-    :link "https://www.youtube.com/embed/aKsu112bzHE"}])
+(reg-fx
+  :open-suggestion
+  (fn [practice-path]
+    (.open js/window practice-path)))
 
 (defn time->seconds [[minutes seconds]]
   (+ seconds (* 60 minutes)))
 
-(defn practice-match? [{:keys [time feelings]} {:keys [length attributes]}]
-  (and (> (time->seconds (if (number? time) [time 0] time))
+(defn practice-match? [{:keys [time-input feelings-input]} {:keys [length feelings]}]
+  (and (> (time->seconds (if (number? time-input) [time-input 0] time-input))
           (time->seconds length))
-       (set/subset? feelings attributes)))
+       (set/subset? feelings-input feelings)))
 
 (reg-event-fx
   :make-suggestion
   (fn-traced [{:keys [db]} _]
-    {:db (assoc-in db
-                   [:state :suggested-practice]
-                   (-> (filter #(practice-match? (:state db) %) practices) first))
-     :dispatch [:change-view routes/practice]}))
+    (let [practice-suggestion (-> (filter #(practice-match? (:state db) %) practices/library) first)]
+      {:db (assoc-in db [:state :suggested-practice] practice-suggestion)
+       :open-suggestion (:path practice-suggestion)})))

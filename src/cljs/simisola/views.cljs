@@ -53,30 +53,14 @@
     (button-pill-grow {:on-click #(dispatch [:make-suggestion])} "And go!")]])
 
 
-(defn practice []
-  (let [suggestion (subscribe [:state :suggested-practice])]
-    (fn []
-      [:div
-       {:style {:max-width "80%"}}
-       [:iframe.mv5
-        {:allow-full-screen "allowfullscreen"
-         :frame-border 0
-         :align "right"
-         :wmode "opaque"
-         :height 480
-         :width 854
-         :src (:link @suggestion)}]])))
-
-
 (defn main-panel []
   (let [view (subscribe [:view])
         time-spans (subscribe [:time-spans])
-        time-selected (subscribe [:state :time])
+        time-selected (subscribe [:state :time-input])
         feelings (subscribe [:feelings])]
 
     (fn []
       (condp = @view
         routes/time-span [time-view @time-spans @time-selected]
         routes/feelings [feelings-view @feelings]
-        routes/practice [practice]
         [:div "Oooops something went wrong"]))))

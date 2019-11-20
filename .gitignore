@@ -9,3 +9,4 @@ out
 /node_modules
 .DS_Store
 .lein-repl-history
+practices.cljs
