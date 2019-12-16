@@ -48,6 +48,6 @@
 (reg-event-fx
   :make-suggestion
   (fn-traced [{:keys [db]} _]
-    (let [practice-suggestion (-> (filter #(practice-match? (:state db) %) practices/library) first)]
+    (let [practice-suggestion (-> (filter #(practice-match? (:state db) %) practices/library) rand-nth)]
       {:db (assoc-in db [:state :suggested-practice] practice-suggestion)
        :open-suggestion (:path practice-suggestion)})))
