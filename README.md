@@ -15,6 +15,12 @@ shadow-cljs will automatically push cljs changes to the browser.
 
 Wait a bit, then browse to [http://localhost:8280](http://localhost:8280).
 
+### Start CLJS REPL in Cursive
+
+create remote REPL connecting over nREPL port and run:
+
+    (shadow/node-repl) 
+
 ### Run tests:
 
 ```
