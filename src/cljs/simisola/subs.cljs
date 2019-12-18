@@ -9,21 +9,11 @@
     (:view db)))
 
 (reg-sub
-  :time-spans
+  :practice-vals
   (fn [db]
-    (:time-spans db)))
+    (:practice-vals db)))
 
 (reg-sub
-  :state
+  :input
   (fn [db [_ value]]
-    (get-in db [:state value])))
-
-(reg-sub
-  :feelings
-  (fn [db]
-    (:feelings db)))
-
-(reg-sub
- :meditations
- (fn [db]
-   (:meditations db)))
+    (get-in db [:input value])))

@@ -1,18 +1,23 @@
 (ns simisola.db
-  (:require [simisola.practices :as practices]
+  (:require [clojure.set :as set]
+            [simisola.practices :as practices]
             [simisola.routes :as routes]))
 
 
 (def time-spans [20 40 60])
 
-(def feelings
+(defn practice-vals [key]
   (->> practices/library
-       (map :feelings)
-       (apply clojure.set/union)))
+       (map key)
+       (apply set/union)))
 
 (def default-db
-  {:view       routes/time-span
-   :time-spans time-spans
-   :feelings   feelings
-   :state      {:time-input nil
-                :feelings-input #{}}})
+  {:view          routes/time-span
+   :practice-vals {:time-spans time-spans
+                   :guided-by  (practice-vals :guided-by)
+                   :types      (practice-vals :types)
+                   :body-needs (practice-vals :body-needs)}
+   :input         {:time       nil
+                   :guided-by  #{}
+                   :types      #{}
+                   :body-needs #{}}})

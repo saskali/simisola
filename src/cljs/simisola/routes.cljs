@@ -3,4 +3,12 @@
 
 (def time-span :time-span)
 
-(def feelings :feelings)
+(def body-needs :body-needs)
+
+(def practice-types :types)
+
+(def facilitator :guided-by)
+
+(def practice :practice)
+
+

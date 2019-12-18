@@ -21,17 +21,6 @@
              time-spans)))
 
 
-(defn feelings-selection [feelings]
-  (into [:div.w-30.pa3.mr2]
-        (map (fn [feeling]
-               [:label.mh2.pointer
-                {:on-change #(dispatch [:update-feeling feeling])}
-                [:input.mr2.v-mid.pointer
-                 {:type "checkbox"}]
-                (name feeling)])
-             feelings)))
-
-
 (defn time-view [time-spans time-selected]
     [:div
      [:h1.f-headline.tc
@@ -41,13 +30,46 @@
       [time-span-selection time-spans time-selected]]])
 
 
-(defn feelings-view [feelings]
+(defn selection [values]
+  (into [:div.w-30.pa3.mr2]
+        (map (fn [value]
+               ^{:key value}
+               [:label.mh2.pointer
+                {:on-change #(dispatch [:update-values value])}
+                [:input.mr2.v-mid.pointer
+                 {:type "checkbox"}]
+                (name value)])
+             values)))
+
+
+(defmulti selection-view
+  (fn [_ next-view _]
+    (if (= :practice next-view)
+      :final-input
+      :input)))
+
+
+(defmethod selection-view :input
+  [practice-vals next-view title]
   [:div
    [:h1.f-headline.tc
-    "How are you feeling?"]
+    title]
 
    [:div.f1.flex.justify-center
-    [feelings-selection feelings]]
+    [selection practice-vals]]
+
+   [:div.f1.flex.justify-center.mv3
+    (button-pill-grow {:on-click #(dispatch [:change-view next-view])} "Next")]])
+
+
+(defmethod selection-view :final-input
+  [practice-vals _ title]
+  [:div
+   [:h1.f-headline.tc
+    title]
+
+   [:div.f1.flex.justify-center
+    [selection practice-vals]]
 
    [:div.f1.flex.justify-center.mv3
     (button-pill-grow {:on-click #(dispatch [:make-suggestion])} "And go!")]])
@@ -55,12 +77,19 @@
 
 (defn main-panel []
   (let [view (subscribe [:view])
-        time-spans (subscribe [:time-spans])
-        time-selected (subscribe [:state :time-input])
-        feelings (subscribe [:feelings])]
+        time-selected (subscribe [:input :time])
+        practice-vals (subscribe [:practice-vals])]
 
     (fn []
       (condp = @view
-        routes/time-span [time-view @time-spans @time-selected]
-        routes/feelings [feelings-view @feelings]
+        routes/time-span [time-view (:time-spans @practice-vals) @time-selected]
+        routes/body-needs [selection-view (:body-needs @practice-vals)
+                                          routes/practice-types
+                                          "Would you like to..."]
+        routes/practice-types [selection-view (:types @practice-vals)
+                                              routes/facilitator
+                                              "Choose the desired type of practice"]
+        routes/facilitator [selection-view (:guided-by @practice-vals)
+                                           routes/practice
+                                           "Any preferred person?"]
         [:div "Oooops something went wrong"]))))

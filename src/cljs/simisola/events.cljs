@@ -21,16 +21,16 @@
 (reg-event-fx
   :update-time
   (fn-traced [{:keys [db]} [_ time]]
-    {:db (assoc-in db [:state :time-input] time)
-     :dispatch [:change-view routes/feelings]}))
+    {:db       (assoc-in db [:input :time] time)
+     :dispatch [:change-view routes/body-needs]}))
 
 (reg-event-db
-  :update-feeling
-  (fn-traced [db [_ feeling]]
-    (update-in db [:state :feelings-input]
-               #(if (contains? % feeling)
-                  (disj % feeling)
-                  (conj % feeling)))))
+  :update-values
+  (fn-traced [db [_ value]]
+    (update-in db [:input (:view db)]
+               #(if (contains? % value)
+                  (disj % value)
+                  (conj % value)))))
 
 (reg-fx
   :open-suggestion
@@ -40,14 +40,18 @@
 (defn time->seconds [[minutes seconds]]
   (+ seconds (* 60 minutes)))
 
-(defn practice-match? [{:keys [time-input feelings-input]} {:keys [length feelings]}]
-  (and (> (time->seconds (if (number? time-input) [time-input 0] time-input))
-          (time->seconds length))
-       (set/subset? feelings-input feelings)))
+(defn practice-match? [input practice]
+  (let [time (:time input)]
+    (and (> (time->seconds (if (number? time) [time 0] time))
+            (time->seconds (:time practice)))
+         (set/subset? (:body-needs input) (:body-needs practice))
+         (set/subset? (:types input) (:types practice))
+         (set/subset? (:guided-by practice) (:guided-by input)))))
 
 (reg-event-fx
   :make-suggestion
   (fn-traced [{:keys [db]} _]
-    (let [practice-suggestion (-> (filter #(practice-match? (:state db) %) practices/library) rand-nth)]
-      {:db (assoc-in db [:state :suggested-practice] practice-suggestion)
-       :open-suggestion (:path practice-suggestion)})))
+    (let [practice-suggestion (-> (filter #(practice-match? (:input db) %) practices/library) rand-nth)]
+      {:db (assoc-in db [:input :suggested-practice] practice-suggestion)
+       :open-suggestion (:path practice-suggestion)
+       :dispatch [:change-view routes/practice]})))
