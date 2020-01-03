@@ -55,7 +55,7 @@
 
 
 (defn selection [values]
-  (into [:div.w-30.pa3.mr2]
+  (into [:div.w-50.pa3.mr2]
         (map (fn [value]
                ^{:key value}
                [:label.mh2.pointer
