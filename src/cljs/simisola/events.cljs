@@ -58,7 +58,7 @@
 (reg-event-fx
   :make-suggestion
   (fn-traced [{:keys [db]} _]
-    (let [practice-suggestion (-> (filter #(practice-match? (:input db) %) practices/library))]
-      {:db (assoc-in db [:input :suggested-practice] (rand-nth practice-suggestion))
-       :open-suggestion (:path practice-suggestion)
+    (let [practice-suggestions (-> (filter #(practice-match? (:input db) %) practices/library) rand-nth)]
+      {:db (assoc-in db [:input :suggested-practice] practice-suggestions)
+       :open-suggestion (:path practice-suggestions)
        :dispatch [:change-view routes/practice]})))
