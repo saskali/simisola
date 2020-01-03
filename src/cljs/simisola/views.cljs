@@ -37,7 +37,7 @@
 
 
 (defn time-span-selection [time-spans]
-  (into [:div.w-30.pa3.mr2]
+  (into [:div.w-40.pa3.mr2]
         (map (fn [time-span]
                (button-pill-grow
                 {:on-click #(dispatch [:update-time time-span])}
