@@ -41,17 +41,18 @@
   (+ seconds (* 60 minutes)))
 
 (defn practice-match? [input practice]
-  (let [time (:time input)]
+  (let [time (:time input)
+        guide-input (:guided-by input)]
     (and (> (time->seconds (if (number? time) [time 0] time))
             (time->seconds (:time practice)))
          (set/subset? (:body-needs input) (:body-needs practice))
          (set/subset? (:types input) (:types practice))
-         (set/subset? (:guided-by practice) (:guided-by input)))))
+         (when-not (empty? guide-input) (set/subset? (:guided-by practice) guide-input)))))
 
 (reg-event-fx
   :make-suggestion
   (fn-traced [{:keys [db]} _]
-    (let [practice-suggestion (-> (filter #(practice-match? (:input db) %) practices/library) rand-nth)]
-      {:db (assoc-in db [:input :suggested-practice] practice-suggestion)
+    (let [practice-suggestion (-> (filter #(practice-match? (:input db) %) practices/library))]
+      {:db (assoc-in db [:input :suggested-practice] (rand-nth practice-suggestion))
        :open-suggestion (:path practice-suggestion)
        :dispatch [:change-view routes/practice]})))

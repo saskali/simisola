@@ -15,5 +15,5 @@
 
 (reg-sub
   :input
-  (fn [db [_ value]]
-    (get-in db [:input value])))
+  (fn [db _]
+    (get db :input)))
