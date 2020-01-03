@@ -4,7 +4,7 @@
             [simisola.routes :as routes]))
 
 
-(def time-spans [20 40 60])
+(def time-spans [20 40 60 80])
 
 (defn practice-vals [key]
   (->> practices/library

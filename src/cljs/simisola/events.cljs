@@ -40,14 +40,20 @@
 (defn time->seconds [[minutes seconds]]
   (+ seconds (* 60 minutes)))
 
+(defn match-category [category input practice]
+  (some (get input category)
+        (get practice category)))
+
 (defn practice-match? [input practice]
   (let [time (:time input)
         guide-input (:guided-by input)]
     (and (> (time->seconds (if (number? time) [time 0] time))
             (time->seconds (:time practice)))
-         (set/subset? (:body-needs input) (:body-needs practice))
-         (set/subset? (:types input) (:types practice))
-         (when-not (empty? guide-input) (set/subset? (:guided-by practice) guide-input)))))
+         (-> :body-needs (match-category input practice) boolean)
+         (-> :types (match-category input practice) boolean)
+         (if (empty? guide-input)
+           true
+           (-> :guided-by (match-category input practice) boolean)))))
 
 (reg-event-fx
   :make-suggestion
