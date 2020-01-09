@@ -1,6 +1,11 @@
 body {
     font-size: 36px;
     font-family: 'Amatic SC', cursive;
+}
+
+.simisola {
+    position: fixed;
+    width: 100%;
+    height: 100%;
     background-size: cover;
-    background-image: url('/home/kayla/repos/projects/tools/simisola/resources/public/images/IMG_7825.JPG');
 }

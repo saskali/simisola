@@ -105,9 +105,14 @@
   (let [view (subscribe [:view])
         practice-vals (subscribe [:practice-vals])]
     (fn []
-      (condp = @view
-        routes/time-span [time-view (:time-spans @practice-vals)]
-        routes/body-needs [selection-view @view (:body-needs @practice-vals)]
-        routes/practice-types [selection-view @view (:types @practice-vals)]
-        routes/facilitator [selection-view @view (:guided-by @practice-vals)]
-        [:div "Oooops something went wrong"]))))
+      [:div.simisola
+       {:style {:background-image
+                (if config/debug?
+                  "url('/images/IMG_7825.JPG')"
+                  "url('/home/kayla/repos/projects/tools/simisola/resources/public/images/IMG_7825.JPG')")}}
+       (condp = @view
+         routes/time-span [time-view @view (:time-spans @practice-vals)]
+         routes/body-needs [selection-view @view (:body-needs @practice-vals)]
+         routes/practice-types [selection-view @view (:types @practice-vals)]
+         routes/facilitator [selection-view @view (:guided-by @practice-vals)]
+         [:div "Oooops something went wrong"])])))
