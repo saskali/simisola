@@ -15,7 +15,7 @@
                 :release     {:modules          {:app {:entries [simisola.core]}}
                               :compiler-options {:optimizations :advanced
                                                  :pretty-print  false
-                                                 :closure-defines {goog.DEBUG true}}}
+                                                 :closure-defines {goog.DEBUG false}}}
                 :devtools    {:http-root    "resources/public"
                               :http-port    8280
                               :preloads     [devtools.preload]
