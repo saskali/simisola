@@ -17,3 +17,9 @@
   :input
   (fn [db _]
     (get db :input)))
+
+(reg-sub
+  :time
+  :<- [:input]
+  (fn [input _]
+    (:time-span input)))

@@ -18,11 +18,10 @@
   (fn-traced [db [_ view-name]]
     (assoc db :view view-name)))
 
-(reg-event-fx
+(reg-event-db
   :update-time
-  (fn-traced [{:keys [db]} [_ time]]
-    {:db       (assoc-in db [:input :time] time)
-     :dispatch [:change-view routes/body-needs]}))
+  (fn-traced [db [_ time]]
+    (assoc-in db [:input :time-span] time)))
 
 (reg-event-db
   :update-values
@@ -45,10 +44,10 @@
         (get practice category)))
 
 (defn practice-match? [input practice]
-  (let [time (:time input)
+  (let [time (:time-span input)
         guide-input (:guided-by input)]
     (and (> (time->seconds (if (number? time) [time 0] time))
-            (time->seconds (:time practice)))
+            (time->seconds (:time-span practice)))
          (-> :body-needs (match-category input practice) boolean)
          (-> :types (match-category input practice) boolean)
          (if (empty? guide-input)

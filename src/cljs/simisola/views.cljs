@@ -1,5 +1,6 @@
 (ns simisola.views
   (:require
+    [simisola.config :as config]
     [re-frame.core :refer [dispatch subscribe]]
     [simisola.events :as events]
     [simisola.routes :as routes]
@@ -31,31 +32,37 @@
   (let [input (subscribe [:input])]
     (button-pill-grow attributes
                       (cond
-                        (empty? (get @input view)) "Skip"
+                        (or (zero? (get @input view))
+                            (empty? (get @input view))) "Skip"
                         (= :guided-by view) "And go!"
                         :else "Next"))))
 
 
-(defn time-span-selection [time-spans]
-  (into [:div.w-40.pa3.mr2]
-        (map (fn [time-span]
-               (button-pill-grow
-                {:on-click #(dispatch [:update-time time-span])}
-                (str "< " time-span)))
-             time-spans)))
+(defn time-span-selection [max-time-span]
+  (let [time (subscribe [:time])]
+    [:div.f1.flex.justify-center
+     [:div.slider
+      [:input {:type "range"
+               :value @time
+               :min 0
+               :max max-time-span
+               :on-change #(dispatch [:update-time (-> % .-target .-value)])}]
+      [:output#rangevalue @time]]]))
 
 
-(defn time-view [time-spans]
+(defn time-view [view max-time-span]
     [:div
-     [:h1.f-headline.tc
+     [:h1.f-headline.tc.mv5
       "How many minutes would you like to practice?"]
 
-     [:div.f1.flex.justify-center
-      [time-span-selection time-spans]]])
+     [time-span-selection max-time-span]
+
+     [:div.f1.flex.justify-center.mv4
+      (button view {:on-click #(dispatch [:change-view routes/body-needs])})]])
 
 
 (defn selection [values]
-  (into [:div.w-50.pa3.mr2]
+  (into [:div.flex.justify-center.w-40.pa3.mr2]
         (map (fn [value]
                ^{:key value}
                [:label.mh2.pointer
@@ -87,7 +94,6 @@
     (button view {:on-click #(dispatch [:change-view (view->next-view view)])})]])
 
 
-
 (defmethod selection-view :final-input
   [view practice-vals]
   [:div
@@ -111,7 +117,7 @@
                   "url('/images/IMG_7825.JPG')"
                   "url('/home/kayla/repos/projects/tools/simisola/resources/public/images/IMG_7825.JPG')")}}
        (condp = @view
-         routes/time-span [time-view @view (:time-spans @practice-vals)]
+         routes/time-span [time-view @view (:time-span @practice-vals)]
          routes/body-needs [selection-view @view (:body-needs @practice-vals)]
          routes/practice-types [selection-view @view (:types @practice-vals)]
          routes/facilitator [selection-view @view (:guided-by @practice-vals)]
