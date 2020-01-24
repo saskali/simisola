@@ -23,3 +23,8 @@
   :<- [:input]
   (fn [input _]
     (:time-span input)))
+
+(reg-sub
+  :suggestion
+  (fn [db _]
+    (get db :suggestion)))

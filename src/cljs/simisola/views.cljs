@@ -107,6 +107,14 @@
     (button view {:on-click #(dispatch [:make-suggestion])})]])
 
 
+(defn suggestion-view []
+  (let [suggestion (subscribe [:suggestion])]
+    (fn []
+      [:div
+       [:h1.f-headline.tc (:title @suggestion)]])))
+
+
+
 (defn main-panel []
   (let [view (subscribe [:view])
         practice-vals (subscribe [:practice-vals])]
@@ -121,4 +129,5 @@
          routes/body-needs [selection-view @view (:body-needs @practice-vals)]
          routes/practice-types [selection-view @view (:types @practice-vals)]
          routes/facilitator [selection-view @view (:guided-by @practice-vals)]
-         [:div "Oooops something went wrong"])])))
+         routes/practice [suggestion-view]
+         [:h1.f-headline.tc "Oooops something went wrong"])])))
